@@ -70,5 +70,5 @@ def main() -> None:
         encoding="utf-8",
     )
 
-    print(f"✅ Trained model. Accuracy={acc:.3f}")
-    print(f"📦 Wrote artifacts to: {out_dir}")
+    print(f"Trained model. Accuracy={acc:.3f}")
+    print(f"Wrote artifacts to: {out_dir}")
