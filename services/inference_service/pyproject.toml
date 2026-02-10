@@ -1,0 +1,22 @@
+[project]
+name = "inference-service"
+version = "0.1.0"
+description = "FastAPI inference service for trained ML models"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+  "pydantic>=2.6",
+  "joblib>=1.3",
+  "pandas>=2.0",
+]
+
+[project.scripts]
+serve-model = "inference_service.main:run"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tools.setuptools.packages.find]
+where = ["src"]
