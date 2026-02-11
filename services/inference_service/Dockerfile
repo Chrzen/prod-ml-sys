@@ -1,37 +1,23 @@
-# --- Base image ---
-FROM python:3.9-slim
+FROM python:3.11-slim
 
-# --- System settings ---
 ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1    
+ENV PYTHONUNBUFFERED=1
 
-# --- Create app user ---
 RUN useradd -m appuser
-
-# --- Set working directory ---
 WORKDIR /app
 
-# ---- Copy dependency metadata first (for caching) ----
-COPY pyproject.toml .
+# Copy both pyproject and source BEFORE installing
+COPY services/inference_service/pyproject.toml ./pyproject.toml
+COPY services/inference_service/src ./src
 
-# --- Install dependencies ---
 RUN pip install --upgrade pip \
     && pip install .
 
-# --- Copy application code ---
-COPY src ./src
+# Copy model artifact
+COPY artifacts/run1/model.pkl ./artifacts/run1/model.pkl
 
-# --- Copy artifacts ---
-COPY ../../artifacts/run1/model.pkl ./artifacts/run1/model.pkl
-
-# --- Fix permissions ---
 RUN chown -R appuser:appuser /app
-
-# --- Switch to non-root user ---
 USER appuser
 
-# --- Expose port ---
 EXPOSE 8000
-
-# --- Start service ---
 CMD ["serve-model"]
