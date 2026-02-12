@@ -1,0 +1,5 @@
+{
+  "seed": 42,
+  "model": "logreg",
+  "max_iter": 200
+}

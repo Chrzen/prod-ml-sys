@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+
+  trainer:
+    build:
+      context: .
+      dockerfile: services/training_service/Dockerfile
+    volumes:
+      - ./shared_artifacts:/app/artifacts
+      - ./data:/app/data
+    command:
+      train-model
+      --data /app/data/sample.csv
+      --out /app/artifacts/run1
+
+  inferencer:
+    build:
+      context: .
+      dockerfile: services/inference_service/Dockerfile
+    volumes:
+      - ./shared_artifacts:/app/artifacts
+    ports:
+      - "8000:8000"
+    depends_on:
+      - trainer
+           
