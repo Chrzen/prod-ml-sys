@@ -13,10 +13,15 @@ def test_train_model_smoke(tmp_path: Path):
     data_path = tmp_path / "sample.csv"
 
     df = pd.DataFrame({
-        "age": [25, 40, 60],
-        "income": [50000, 80000, 120000],
-        "bought": [0, 1, 1],
-    })
+    "age": [22, 45, 31, 29, 52, 41, 24, 36, 27, 48],
+    "city": [
+        "Cape Town", "Johannesburg", "Cape Town", "Durban",
+        "Johannesburg", "Durban", "Cape Town",
+        "Johannesburg", "Durban", "Cape Town"
+    ],
+    "income": [12000, 42000, 28000, 25000, 60000, 38000, 15000, 52000, 22000, 47000],
+    "bought": [0, 1, 0, 0, 1, 1, 0, 1, 0, 1]
+})
 
     df.to_csv(data_path, index=False)
 
