@@ -18,22 +18,6 @@ MODEL_PATH = Path("artifacts/run1/model.pkl")
 configure_logging()
 logger = logging.getLogger(__name__)
 
-@app.middleware("http")
-async def log_requests(request, call_next): 
-    start = time.time()
-
-    response = await call_next(request)
-
-    duration = time.time() - start
-
-    logger.info(
-        f"{request.method} {request.url.path} "
-        f"status={response.status_code} "
-        f"duration={duration:.3f}s"
-    )   
-
-    return response
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global model_store
@@ -59,6 +43,21 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Inference Service", version=APP_VERSION, lifespan=lifespan)
 
+@app.middleware("http")
+async def log_requests(request, call_next): 
+    start = time.time()
+
+    response = await call_next(request)
+
+    duration = time.time() - start
+
+    logger.info(
+        f"{request.method} {request.url.path} "
+        f"status={response.status_code} "
+        f"duration={duration:.3f}s"
+    )   
+
+    return response
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(req: PredictionRequest):
