@@ -47,3 +47,9 @@ jobs:
       run: |
         docker build -t training-service \
         -f services/training_service/Dockerfile .
+
+    - name: Run container
+      run: |
+        docker run -d -p 8000:8000 --name test-container inference-service
+        sleep 5
+        docker ps
