@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+     
+    - name: Install training service
+      run: |
+        pip install -e services/training_service
+
+    - name: Install inference service (dev)
+      run: |
+        pip install -e services/inference_service[dev]        
+    
+    - name: Run tests
+      run: |
+        pytest -q
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Build inference image
+      run: |
+        docker build -t inference-service \
+        -f services/inference_service/Dockerfile .
+
+    - name: Build training image
+      run: |
+        docker build -t training-service \
+        -f services/training_service/Dockerfile .
