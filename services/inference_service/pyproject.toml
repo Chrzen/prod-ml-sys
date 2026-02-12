@@ -22,3 +22,9 @@ build-backend = "setuptools.build_meta"
 
 [tools.setuptools.packages.find]
 where = ["src"]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "httpx>=0.27"
+]
