@@ -40,7 +40,7 @@ async def lifespan(app: FastAPI):
 
     # Shutdown logic could go here later
 
-
+# Create FastAPI app with lifespan for startup/shutdown events
 app = FastAPI(title="Inference Service", version=APP_VERSION, lifespan=lifespan)
 
 @app.middleware("http")
