@@ -11,11 +11,11 @@ def test_train_model_smoke(tmp_path: Path):
     # data_path = Path("data/sample.csv")
 
     data_path = tmp_path / "sample.csv"
-    
+
     df = pd.DataFrame({
         "age": [25, 40, 60],
         "income": [50000, 80000, 120000],
-        "target": [0, 1, 1],
+        "bought": [0, 1, 1],
     })
 
     df.to_csv(data_path, index=False)
