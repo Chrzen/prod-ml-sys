@@ -5,13 +5,14 @@ from pathlib import Path
 from unittest import result
 import pandas as pd
 
-
 def test_train_model_smoke(tmp_path: Path):
     
     out_dir = tmp_path / "run"
-    # data_path = Path("data/sample.csv")
-    data_path = tmp_path / "sample.csv"
 
+    # data_path = Path("data/sample.csv")
+
+    data_path = tmp_path / "sample.csv"
+    
     df = pd.DataFrame({
         "age": [25, 40, 60],
         "income": [50000, 80000, 120000],
