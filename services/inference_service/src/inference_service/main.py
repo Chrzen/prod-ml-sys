@@ -2,6 +2,9 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 import time
 
+import logging
+from inference_service.logger import configure_logging
+
 import pandas as pd
 from fastapi import FastAPI
 
@@ -12,8 +15,24 @@ from inference_service.schemas import PredictionRequest, PredictionResponse
 APP_VERSION = "0.1.0"
 MODEL_PATH = Path("artifacts/run1/model.pkl")
 
-model_store: ModelStore | None = None
+configure_logging()
+logger = logging.getLogger(__name__)
 
+@app.middleware("http")
+async def log_requests(request, call_next): 
+    start = time.time()
+
+    response = await call_next(request)
+
+    duration = time.time() - start
+
+    logger.info(
+        f"{request.method} {request.url.path} "
+        f"status={response.status_code} "
+        f"duration={duration:.3f}s"
+    )   
+
+    return response
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -25,10 +44,10 @@ async def lifespan(app: FastAPI):
     for attempt in range(max_attempts):
         try:
             model_store = ModelStore(MODEL_PATH)
-            print("Model loaded successfully.")
+            logger.info("Model loaded successfully.")
             break
         except FileNotFoundError:
-            print(f"Model not found. Retry {attempt+1}/{max_attempts}...")
+            logger.warning(f"Model not found. Retry {attempt+1}/{max_attempts}...")
             time.sleep(delay)
     else:
         raise RuntimeError("Model never became available.")
